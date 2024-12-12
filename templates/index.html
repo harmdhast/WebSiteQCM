@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QCM - Introduction à la Programmation Fonctionnelle</title>
+</head>
+
+<body>
+    <h1>QCM - Introduction à la Programmation Fonctionnelle</h1>
+    <div id="questions-container">
+        {% for question in questions %}
+        <fieldset>
+            <legend>{{ question.question }}</legend>
+            {% set correct_answers = question.answers|selectattr('isCorrect', 'equalto', True)|list %}
+            {% if correct_answers|length > 1 %}
+                {% for answer in question.answers %}
+                <div>
+                    <input type="checkbox" id="q{{ question.id }}a{{ answer.id }}" name="q{{ question.id }}"
+                        value="{{ answer.id }}" onclick="checkAnswer({{ question.id }}, {{ answer.id }}, {{ answer.isCorrect | lower }})">
+                    <label for="q{{ question.id }}a{{ answer.id }}" id="label-q{{ question.id }}a{{ answer.id }}">{{ answer.label }}</label>
+                </div>
+                {% endfor %}
+            {% else %}
+                {% for answer in question.answers %}
+                <div>
+                    <input type="radio" id="q{{ question.id }}a{{ answer.id }}" name="q{{ question.id }}"
+                        value="{{ answer.id }}" onclick="checkAnswer({{ question.id }}, {{ answer.id }}, {{ answer.isCorrect | lower }})">
+                    <label for="q{{ question.id }}a{{ answer.id }}" id="label-q{{ question.id }}a{{ answer.id }}">{{ answer.label }}</label>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </fieldset>
+        {% endfor %}
+    </div>
+
+    <script>
+        function checkAnswer(questionId, answerId, isCorrect) {
+            const selectedLabel = document.getElementById(`label-q${questionId}a${answerId}`);
+            selectedLabel.style.color = isCorrect ? 'green' : 'red';
+        }
+    </script>
+</body>
+
+</html>
