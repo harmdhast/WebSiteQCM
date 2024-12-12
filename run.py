@@ -4,6 +4,7 @@ from starlette.routing import Route
 from starlette.templating import Jinja2Templates
 import uvicorn
 import csv
+import os
 from starlette.requests import Request
 from starlette.responses import RedirectResponse
 from starlette.datastructures import UploadFile
@@ -12,56 +13,58 @@ templates = Jinja2Templates(directory="templates")
 
 # Load all csv
 questions = []
-with open("data.csv", "r", encoding="ISO-8859-1") as file:
-    reader = csv.DictReader(
-        file,
-        fieldnames=[
-            "id",
-            "question",
-            "id2",
-            "label",
-            "isCorrect",
-            "id3",
-            "label4",
-            "isCorrect5",
-            "id6",
-            "label7",
-            "isCorrect8",
-            "id9",
-            "label10",
-            "isCorrect11",
-        ],
-        delimiter=";",
-    )
-    next(reader)  # Skip the header row
-    for row in reader:
-        question_dict = {
-            "id": int(row["id"]),
-            "question": row["question"],
-            "answers": [
-                {
-                    "id": int(row["id2"]),
-                    "label": row["label"],
-                    "isCorrect": row["isCorrect"].lower() == "true",
-                },
-                {
-                    "id": int(row["id3"]),
-                    "label": row["label4"],
-                    "isCorrect": row["isCorrect5"].lower() == "true",
-                },
-                {
-                    "id": int(row["id6"]),
-                    "label": row["label7"],
-                    "isCorrect": row["isCorrect8"].lower() == "true",
-                },
-                {
-                    "id": int(row["id9"]),
-                    "label": row["label10"],
-                    "isCorrect": row["isCorrect11"].lower() == "true",
-                },
+csv_file_path = "data.csv"
+if os.path.exists(csv_file_path) and os.path.getsize(csv_file_path) > 0:
+    with open(csv_file_path, "r", encoding="ISO-8859-1") as file:
+        reader = csv.DictReader(
+            file,
+            fieldnames=[
+                "id",
+                "question",
+                "id2",
+                "label",
+                "isCorrect",
+                "id3",
+                "label4",
+                "isCorrect5",
+                "id6",
+                "label7",
+                "isCorrect8",
+                "id9",
+                "label10",
+                "isCorrect11",
             ],
-        }
-        questions.append(question_dict)
+            delimiter=";",
+        )
+        next(reader)  # Skip the header row
+        for row in reader:
+            question_dict = {
+                "id": int(row["id"]),
+                "question": row["question"],
+                "answers": [
+                    {
+                        "id": int(row["id2"]),
+                        "label": row["label"],
+                        "isCorrect": row["isCorrect"].lower() == "true",
+                    },
+                    {
+                        "id": int(row["id3"]),
+                        "label": row["label4"],
+                        "isCorrect": row["isCorrect5"].lower() == "true",
+                    },
+                    {
+                        "id": int(row["id6"]),
+                        "label": row["label7"],
+                        "isCorrect": row["isCorrect8"].lower() == "true",
+                    },
+                    {
+                        "id": int(row["id9"]),
+                        "label": row["label10"],
+                        "isCorrect": row["isCorrect11"].lower() == "true",
+                    },
+                ],
+            }
+            questions.append(question_dict)
 
 
 async def homepage(request):
