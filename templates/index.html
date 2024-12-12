@@ -44,3 +44,16 @@
 </body>
 
 </html>
+<button onclick="showAllAnswers()">Show All Answers</button>
+
+<script>
+    function showAllAnswers() {
+        const questions = {{ questions|tojson }};
+        questions.forEach(question => {
+            question.answers.forEach(answer => {
+                const label = document.getElementById(`label-q${question.id}a${answer.id}`);
+                label.style.color = answer.isCorrect ? 'green' : 'red';
+            });
+        });
+    }
+</script>
